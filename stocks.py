@@ -1,6 +1,6 @@
 import urllib 
 
-# TODO: better descriptions
+# TODO: better error code descriptions
 class ConnectionError(Exception) :
 	def __init__(self,code) :
 		self.code = code
@@ -45,9 +45,12 @@ def historical_quote(symbol,date_from,date_to,period) :
 	except (ValueError, IOError) as e :
 		raise ConnectionError("E001")
 
-def quote(symbol,tags) :
-	
-
+# grab a current stock quote from yahoo api
+def current_quote(symbol,*tags) :
+	baseUrl = "http://download.finance.yahoo.com/d/quotes.csv?s="
+	query = baseUrl+symbol+"&f="+tags[0]
+	content = urllib.urlopen(query)
+	return content.read()
 
 if __name__ == '__main__':
 
@@ -56,6 +59,7 @@ if __name__ == '__main__':
 
 	for stock in dji :
 		try :
+			print current_quote(stock,'nl1')
 			print historical_quote(stock,(2,3,2000),(2,5,2000),'d')
 		except ConnectionError :
 			pass
