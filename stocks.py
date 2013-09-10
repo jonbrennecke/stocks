@@ -1,4 +1,10 @@
-import urllib 
+import urllib
+import re
+
+class Stock() :
+	def __init__ :
+		
+
 
 # TODO: better error code descriptions
 class ConnectionError(Exception) :
@@ -50,16 +56,21 @@ def current_quote(symbol,*tags) :
 	baseUrl = "http://download.finance.yahoo.com/d/quotes.csv?s="
 	query = baseUrl+symbol+"&f="+tags[0]
 	content = urllib.urlopen(query)
-	return content.read()
+	result = content.read()
+	pattern = re.compile("\"(.*)\"")
+	name = re.search(pattern, result).group()
+	return { 'name' : name, "vales" : result }
 
 if __name__ == '__main__':
 
 	# stock ticker symbols in the Dow Jones Index (^DJI)
-	dji = ["AA","AXP","BA","BAC","CAT","CSCO","CVX","DD","DIS","GE","HD","HPQ","IBM","INTC","JNJ","JPM","KO","MCD","MMM","MRK","MSFT","PFE","PG","T","TRV","UNH","UTX","VZ","WMT","XOM"]
+	dji = ["AA","AXP","BA","BAC","CAT","CSCO","CVX","DD","DIS",
+		"GE","HD","HPQ","IBM","INTC","JNJ","JPM","KO","MCD","MMM","MRK",
+		"MSFT","PFE","PG","T","TRV","UNH","UTX","VZ","WMT","XOM"]
 
 	for stock in dji :
 		try :
-			print current_quote(stock,'nl1')
+			#print current_quote(stock,'nl1')
 			print historical_quote(stock,(2,3,2000),(2,5,2000),'d')
 		except ConnectionError :
 			pass
